@@ -1,11 +1,16 @@
 {
   "name": "symposium",
-  "owner": { "name": "hmon" },
+  "owner": {
+    "name": "hmon"
+  },
   "plugins": [
     {
       "name": "symposium",
       "source": "./",
       "description": "Multi-model deliberation to one verdict with a vote tally."
     }
-  ]
+  ],
+  "metadata": {
+    "description": "Multi-model deliberation skill for Claude Code"
+  }
 }
