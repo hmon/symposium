@@ -1,0 +1,8 @@
+{
+  "name": "symposium",
+  "version": "0.1.0",
+  "description": "Multi-model deliberation: put one decision to a panel of models from different vendors (Claude, Codex, Cursor), run position and rebuttal rounds, and merge them into one verdict with a vote tally.",
+  "author": { "name": "hmon" },
+  "license": "MIT",
+  "keywords": ["multi-model", "deliberation", "codex", "cursor", "decision"]
+}

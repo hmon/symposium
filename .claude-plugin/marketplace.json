@@ -1,0 +1,11 @@
+{
+  "name": "symposium",
+  "owner": { "name": "hmon" },
+  "plugins": [
+    {
+      "name": "symposium",
+      "source": "./",
+      "description": "Multi-model deliberation to one verdict with a vote tally."
+    }
+  ]
+}
