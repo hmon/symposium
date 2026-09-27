@@ -34,7 +34,7 @@ Add "READ-ONLY: never modify files, never call other models."
 
 ### 2. Lineup gate
 
-Detect harnesses with `command -v codex cursor-agent` and similar checks. Claude subagents are always available. The default is one strong model per available vendor, 3 seats. Propose each seat's model, harness and effort, the number of rounds and a rough token cost. **Wait for a yes.**
+Detect harnesses with `command -v codex cursor-agent` and similar checks. Claude subagents are always available. The default is one strong model per available vendor, 3 seats. Propose each seat's model, harness and effort, the number of rounds and a rough token cost. **Wait for a yes.** Model ids vary by account, and a plausible id can still be rejected (a CLI may accept `gpt-6-astra` and refuse `gpt-6`). Once the lineup is approved, run one trivial call per CLI seat before round 1. If an id is rejected, bring alternatives back to the gate.
 
 ### 3. Round 1: positions
 
@@ -42,7 +42,7 @@ Run all seats in parallel, each on the same brief, with output going to `r1-<sea
 
 ### 4. Settle facts
 
-Pull out the claims that can be checked: model availability, versions, receipts, file contents. Verify them locally with cheap reads. Write `facts.md`, keeping the settled facts separate from the open disputes.
+Pull out the claims that can be checked: model availability, versions, receipts, file contents. Verify them locally with cheap reads. Write `facts.md`, keeping the settled facts separate from the open disputes. Prefer ground truth over what a seat says: receipts, logs, config files and past run output. A seat's claim about what "the default" does, or what something costs, is a hypothesis until a receipt confirms it.
 
 ### 5. Round 2: rebuttal
 
@@ -55,12 +55,18 @@ Write `verdict.md` and show it to the user:
 - where the savings or gains come from
 - the risks, meaning where the verdict is weakest
 - the exact changes proposed, as files and values
+- **Enforceability:** for each change, whether the target system can actually express it (a config key, a flag, a per-item setting). A decision the tool can't express is written down as a standing instruction for the conductor, and labeled that way.
+- **Revisit triggers:** each estimate the verdict relies on (for example "cheaper model halves spend") comes with the measurement that would overturn it and when to check (for example "after 2 uses, compare tokens per accepted item")
 
 Report the tokens each seat used, when the harness exposes them.
 
 ### 7. Action gate
 
 Ask the user. Apply the changes only after a yes.
+
+### 8. Follow-through
+
+The verdict is a starting point, not a contract. When a revisit trigger fires, report the measured result next to the estimate. Real usage often reverses an estimate: a "cheap" worker that needs about twice the tokens per item, or a step that finds nothing three times in a row. Then offer to adjust. Record which of the user's overrides should outlast the session, and treat them as settled from then on.
 
 ## Seat adapters
 
@@ -72,6 +78,12 @@ Ask the user. Apply the changes only after a yes.
 | Other CLI | its non-interactive mode, its read-only flag, stdout to a file | per CLI |
 
 For a CLI seat, pass the folder path inside the prompt so it can read the round files.
+
+## Prompt tips
+
+- Round 2 works best when the conductor lists 3–5 named disputes and asks for concede or rebut on each. An open-ended "respond to the others" invites essays.
+- Word caps: 700 for round 1 and 400 for round 2 kept every seat substantive in practice.
+- Give each seat the absolute path to the round folder. CLI seats don't share the conductor's working directory assumptions.
 
 ## Failure handling
 
